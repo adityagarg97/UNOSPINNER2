@@ -1,0 +1,85 @@
+<html>
+<head>
+    <title>HTML5 Canvas Winning Wheel</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script type="text/javascript" src="javascript-winwheel-2.7.0/winwheel.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+</head>
+<body>
+<div align="center">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>
+                <div class="power_controls">
+                    <img src="UNO_Logo_PR_Announcement_20160719_4pm_CET_1468855694.png" style="margin: auto; height: 150px; width: 150px">
+                    <br />
+                    <br />
+                    <br />
+                    <img id="spin_button" src="spin_on.png" class="clickable" alt="Spin" onClick="startSpin();" />
+                    <br />
+                </div>
+            </td>
+            <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                <canvas id="canvas" width="434" height="434">
+                    <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                </canvas>
+            </td>
+            <td>
+                <i><div id="result" style="margin: 10px; font-family: 'Arial Black'; font-size: large"></div></i>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    // Create new wheel object specifying the parameters at creation time.
+    var theWheel = new Winwheel({
+        'numSegments'  : 9,
+        'outerRadius'  : 212,
+        'textFontSize' : 20,
+        'segments'     :
+            [
+                {'fillStyle' : 'blue', 'text' : 'Draw Blue'},
+                {'fillStyle' : 'red', 'text' : 'Draw Red'},
+                {'fillStyle' : 'yellow', 'text' : 'Show Hand'},
+                {'fillStyle' : 'magenta', 'text' : 'Trade Hand'},
+                {'fillStyle' : 'cyan', 'text' : 'Discard Color'},
+                {'fillStyle' : 'orange', 'text' : 'Discard Number'},
+                {'fillStyle' : 'lightgreen', 'text' : 'War'},
+                {'fillStyle' : 'pink', 'text' : 'Almost UNO'},
+                {'fillStyle' : 'coral', 'text' : 'UNO Spin'}
+            ],
+        'animation' :
+            {
+                'type'     : 'spinToStop',
+                'duration' : 5,
+                'spins'    : 8,
+                'callbackFinished' : alertPrize
+            }
+    });
+    var wheelPower    = 0;
+    var wheelSpinning = false;
+    function startSpin()
+    {
+        if (wheelSpinning == false)
+        {
+            theWheel.animation.spins = 8;
+            document.getElementById('spin_button').src       = "spin_off.png";
+            document.getElementById('spin_button').className = "";
+            theWheel.startAnimation();
+            wheelSpinning = true;
+        }
+    }
+    function alertPrize(indicatedSegment)
+    {
+        document.getElementById('result').innerHTML=indicatedSegment.text
+        document.body.style.backgroundColor = indicatedSegment.fillStyle;
+        document.getElementById('spin_button').src       = "spin_on.png";
+        document.getElementById('spin_button').className = "clickable";
+        theWheel.stopAnimation(false);
+        theWheel.rotationAngle = 0;
+        theWheel.draw();
+        wheelSpinning = false;
+    }
+</script>
+</body>
+</html>
